@@ -156,7 +156,7 @@ class Scanner {
 
         while(!(peek() == '*' && peekNext() == '/') && !isAtEnd()){
             if(peek() == '\n') line++;
-            if (!isAtEnd()) advance();
+            advance();
             if(peek() == '/' && peekNext() == '*'){advance(); longComment();}
 
         }
