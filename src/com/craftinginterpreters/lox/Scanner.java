@@ -153,17 +153,27 @@ class Scanner {
         addToken(STRING, value);
     }
     private void longComment(){
-
-        while(!(peek() == '*' && peekNext() == '/') && !isAtEnd()){
-            if(peek() == '\n') line++;
-            advance();
-            if(peek() == '/' && peekNext() == '*'){advance(); longComment();}
-
+        if(substrCount("/*") == substrCount("*/")) {
+            while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
+                if (peek() == '\n') line++;
+                advance();
+                if (peek() == '/' && peekNext() == '*') {advance(); longComment();}
+            }
         }
+        else{addToken(SLASH); addToken(STAR);}
         if(!isAtEnd()) {
             advance();
             advance();
         }
+    }
+    private int substrCount(String str){
+        int count=0;
+        int index=0;
+        while(source.indexOf(str)!=-1){
+            index=source.indexOf(str);
+            count++;
+        }
+        return count;
     }
 
     private boolean match(char expected) {
