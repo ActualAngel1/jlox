@@ -35,6 +35,7 @@ class Scanner {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+    private int funcCounter = 0;
 
     Scanner(String source) {
         this.source = source;
@@ -153,24 +154,27 @@ class Scanner {
         addToken(STRING, value);
     }
     private void longComment(){
-        if(substrCount("/*") == substrCount("*/")) {
+        boolean bool = substrCount("/*") == substrCount("*/")-this.funcCounter;
+        
+        if(bool) {
             while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
                 if (peek() == '\n') line++;
                 advance();
-                if (peek() == '/' && peekNext() == '*') {advance(); longComment();}
+                if (peek() == '/' && peekNext() == '*') {advance(); this.funcCounter++; longComment();}
             }
         }
-        else{addToken(SLASH); addToken(STAR);}
-        if(!isAtEnd()) {
+        else{tokens.add(new Token(SLASH, "/", null, line)); tokens.add(new Token(STAR, "*", null, line));}
+        if(!isAtEnd() && bool) {
             advance();
             advance();
         }
     }
     private int substrCount(String str){
         int count=0;
-        int index=0;
-        while(source.indexOf(str)!=-1){
-            index=source.indexOf(str);
+        int index=current-2;
+        while(source.indexOf(str, index)!=-1){
+            System.out.println("debug info");
+            index=source.indexOf(str, index)+1;
             count++;
         }
         return count;
