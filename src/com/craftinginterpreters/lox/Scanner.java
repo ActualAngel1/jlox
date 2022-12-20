@@ -35,7 +35,8 @@ class Scanner {
     private int start = 0;
     private int current = 0;
     private int line = 1;
-    private int funcCounter = 0;
+    private int closerCounter = 0;
+    private int starterCounter = 0;
 
     Scanner(String source) {
         this.source = source;
@@ -65,7 +66,6 @@ class Scanner {
             case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
-
             case '!': addToken(match('=') ? BANG_EQUAL : BANG);
                 break;
             case '=':
@@ -84,8 +84,7 @@ class Scanner {
                 }
 
                 else if (match('*')){
-                    longComment();
-
+                    this.starterCounter=0; this.closerCounter=0; longComment();
                 }
                 else {
                     addToken(SLASH);
@@ -154,26 +153,25 @@ class Scanner {
         addToken(STRING, value);
     }
     private void longComment(){
-        boolean bool = substrCount("/*") == substrCount("*/")-this.funcCounter;
-        
+        // The bool checking is to counter the case of "/*" without an "*/", we want the interpreter to dismiss it as a normal token
+        boolean bool = substrCount("/*")-this.starterCounter == substrCount("*/")-this.closerCounter;
         if(bool) {
             while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
                 if (peek() == '\n') line++;
                 advance();
-                if (peek() == '/' && peekNext() == '*') {advance(); this.funcCounter++; longComment();}
+                if (peek() == '/' && peekNext() == '*') {advance(); this.closerCounter++; longComment();}
             }
+            this.starterCounter++;
         }
-        else{tokens.add(new Token(SLASH, "/", null, line)); tokens.add(new Token(STAR, "*", null, line));}
-        if(!isAtEnd() && bool) {
-            advance();
-            advance();
+        else{
+            tokens.add(new Token(SLASH, "/", null, line));
+            tokens.add(new Token(STAR, "*", null, line));
         }
+        if(!isAtEnd() && bool) {advance();advance();}
     }
     private int substrCount(String str){
-        int count=0;
-        int index=current-2;
+        int count=0, index=current-2;
         while(source.indexOf(str, index)!=-1){
-            System.out.println("debug info");
             index=source.indexOf(str, index)+1;
             count++;
         }
