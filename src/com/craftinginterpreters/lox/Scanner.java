@@ -35,8 +35,6 @@ class Scanner {
     private int start = 0;
     private int current = 0;
     private int line = 1;
-    private int closerCounter = 0;
-    private int starterCounter = 0;
 
     Scanner(String source) {
         this.source = source;
@@ -84,7 +82,7 @@ class Scanner {
                 }
 
                 else if (match('*')){
-                    this.starterCounter=0; this.closerCounter=0; longComment();
+                    longComment();
                 }
                 else {
                     addToken(SLASH);
@@ -153,38 +151,19 @@ class Scanner {
         addToken(STRING, value);
     }
     private void longComment(){
-        // The bool checking is to counter the case of "/*" without an "*/", we want the interpreter to dismiss it as a normal token
-        boolean bool = substrCount("/*")-this.starterCounter == substrCount("*/")-this.closerCounter;
-        if(bool) {
             while (!(peek() == '*' && peekNext() == '/') && !isAtEnd()) {
                 if (peek() == '\n') line++;
                 advance();
-                if (peek() == '/' && peekNext() == '*') {advance(); this.closerCounter++; longComment();}
+                if (peek() == '/' && peekNext() == '*') {advance(); longComment();}
             }
-            this.starterCounter++;
+            if(!isAtEnd()) {advance();advance();}
         }
-        else{
-            tokens.add(new Token(SLASH, "/", null, line));
-            tokens.add(new Token(STAR, "*", null, line));
-        }
-        if(!isAtEnd() && bool) {advance();advance();}
-    }
-    private int substrCount(String str){
-        int count=0, index=current-2;
-        while(source.indexOf(str, index)!=-1){
-            index=source.indexOf(str, index)+1;
-            count++;
-        }
-        return count;
-    }
-
     private boolean match(char expected) {
         if (isAtEnd()) return false;
         if (source.charAt(current) != expected) return false;
         current++;
         return true;
     }
-
     private char peek() {
         if (isAtEnd()) return '\0';
         return source.charAt(current);
