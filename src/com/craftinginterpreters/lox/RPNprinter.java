@@ -29,10 +29,10 @@ class RPNprinter implements Expr.Visitor<String> {
         StringBuilder builder = new StringBuilder();
 
         for (Expr expr : exprs) {
-            builder.append(" ");
             builder.append(expr.accept(this));
+            builder.append(" ");
         }
-        builder.append(" ").append(name);
+        builder.append(name);
 
         return builder.toString();
     }
