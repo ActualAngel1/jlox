@@ -25,6 +25,10 @@ class AstPrinter implements Expr.Visitor<String> {
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
+    @Override
+    public String visitTernaryExpr(Expr.Ternary expr) {
+        return parenthesize("?", expr.expr, expr.ifTruePart, expr.ifFalsePart);
+    }
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
 

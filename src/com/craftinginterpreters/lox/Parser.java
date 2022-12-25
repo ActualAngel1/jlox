@@ -20,8 +20,62 @@ class Parser {
         }
     }
     private Expr expression() {
-        return equality();
+        return comma();
     }
+    private Expr comma(){
+        Expr expr = ternary();
+
+        while(match(COMMA)) {
+            Token operator = previous();
+            Expr right = ternary();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr ternary(){
+        Expr expr = equality();
+        /*
+        if (expr==null){
+            error(peek(), "Must have an expression before a ternary operation");
+            return null;
+        }
+        */
+        if(match(QUESTION_MARK)) {
+            Expr ifTruePart = equality();
+            consume(COLON, "A colon is expected in a ternary operation");
+            Expr ifFalsePart = equality();
+            // since there are 3 parts to this expression, we can no longer use Expr.Binary and we need to create Expr.Ternary
+            expr = new Expr.Ternary(expr, ifTruePart, ifFalsePart);
+        }
+        return expr;
+    }
+    /*
+    private Expr tenaryOp1(){
+        Expr expr = tenaryOp2();
+
+        if(match(QUESTION_MARK))
+        {
+            Token operator = previous();
+            Expr right = tenaryOp2();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+    private Expr tenaryOp2(){
+        Expr expr = equality();
+
+        if(match(COLON)){
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+    */
     private Expr equality() {
         Expr expr = comparison();
 
@@ -89,6 +143,8 @@ class Parser {
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+        // my ide begs me to add a return statement, although the parser stops once it catches an error, which is weird
+        return null;
     }
 
     private boolean match(TokenType... types) {
