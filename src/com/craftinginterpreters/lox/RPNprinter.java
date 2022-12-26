@@ -27,7 +27,7 @@ class RPNprinter implements Expr.Visitor<String> {
     }
     @Override
     public String visitTernaryExpr(Expr.Ternary expr) {
-        return parenthesize("?", expr.expr, expr.ifTruePart, expr.ifFalsePart);
+        return parenthesize("?", expr.condition, expr.ifTruePart, expr.ifFalsePart);
     }
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
