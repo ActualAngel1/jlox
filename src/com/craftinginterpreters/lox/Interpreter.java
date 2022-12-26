@@ -59,12 +59,8 @@ class Interpreter implements Expr.Visitor<Object> {
     @Override
     public Object visitTernaryExpr(Expr.Ternary expr) {
         Object condition = evaluate(expr.condition);
-
-        if(condition instanceof Boolean && (boolean)condition){
-            return evaluate(expr.ifTruePart);
-        }
-        else if(condition instanceof Boolean && !(boolean)condition){
-            return evaluate(expr.ifFalsePart);
+        if(condition instanceof Boolean) {
+            return ((boolean) condition ? evaluate(expr.ifTruePart) : evaluate(expr.ifFalsePart));
         }
 
         // For now.
