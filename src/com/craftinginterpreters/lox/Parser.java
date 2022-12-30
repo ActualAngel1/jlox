@@ -51,31 +51,6 @@ class Parser {
         }
         return expr;
     }
-    /*
-    private Expr tenaryOp1(){
-        Expr expr = tenaryOp2();
-
-        if(match(QUESTION_MARK))
-        {
-            Token operator = previous();
-            Expr right = tenaryOp2();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-
-        return expr;
-    }
-    private Expr tenaryOp2(){
-        Expr expr = equality();
-
-        if(match(COLON)){
-            Token operator = previous();
-            Expr right = equality();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-
-        return expr;
-    }
-    */
     private Expr equality() {
         Expr expr = comparison();
 
