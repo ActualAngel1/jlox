@@ -115,7 +115,7 @@ class Parser {
     }
 
     private Expr ternary(){
-        Expr expr = equality();
+        Expr expr = or();
         /*
         if (expr==null){
             error(peek(), "Must have an expression before a ternary operation");
@@ -123,12 +123,34 @@ class Parser {
         }
         */
         if(match(QUESTION_MARK)) {
-            Expr ifTruePart = equality();
+            Expr ifTruePart = or();
             consume(COLON, "A colon is expected in a ternary operation");
-            Expr ifFalsePart = equality();
+            Expr ifFalsePart = or();
             // since there are 3 parts to this expression, we can no longer use Expr.Binary and we need to create Expr.Ternary
             expr = new Expr.Ternary(expr, ifTruePart, ifFalsePart);
         }
+        return expr;
+    }
+    private Expr or() {
+        Expr expr = and();
+
+        while (match(OR)) {
+            Token operator = previous();
+            Expr right = and();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+    private Expr and() {
+        Expr expr = equality();
+
+        while (match(AND)) {
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
         return expr;
     }
     private Expr equality() {
