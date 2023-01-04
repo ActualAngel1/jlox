@@ -1,3 +1,4 @@
+/*
 package com.craftinginterpreters.lox;
 
 class RPNprinter implements Expr.Visitor<String> {
@@ -58,3 +59,4 @@ class RPNprinter implements Expr.Visitor<String> {
         System.out.println(new RPNprinter().print(expression));
     }
 }
+ */
