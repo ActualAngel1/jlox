@@ -13,6 +13,9 @@ class Interpreter implements Expr.Visitor<Object>,
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
+        catch (BreakException error){
+            Lox.BreakException(error);
+        }
     }
     @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
@@ -222,6 +225,6 @@ class Interpreter implements Expr.Visitor<Object>,
     }
     @Override
     public Void visitBreakStmt(Stmt.Break stmt){
-        throw new BreakException(stmt.name, "Break must be within a Block statement");
+        throw new BreakException(stmt.name, "Break must be within a while statement");
     }
 }

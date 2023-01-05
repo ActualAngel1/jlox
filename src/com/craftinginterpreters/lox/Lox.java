@@ -90,4 +90,9 @@ public class Lox {
                     "\n[line " + error.token.line + "]");
             hadRuntimeError = true;
         }
+        static void BreakException(BreakException error) {
+            System.err.println(error.getMessage() +
+                    "\n[line " + error.token.line + "]");
+            hadRuntimeError = true;
+        }
     }
