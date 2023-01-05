@@ -205,7 +205,12 @@ class Interpreter implements Expr.Visitor<Object>,
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.body);
+            try {
+                execute(stmt.body);
+            }
+            catch(Exception BreakException){
+                break;
+            }
         }
         return null;
     }
@@ -214,5 +219,9 @@ class Interpreter implements Expr.Visitor<Object>,
         Object value = evaluate(expr.value);
         environment.assign(expr.name, value);
         return value;
+    }
+    @Override
+    public Void visitBreakStmt(Stmt.Break stmt){
+        throw new BreakException(stmt.name, "Break must be within a Block statement");
     }
 }
