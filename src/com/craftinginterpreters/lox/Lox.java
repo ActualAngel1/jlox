@@ -53,20 +53,21 @@ public class Lox {
             if (hadError) return;
 
             // I want the REPL session to print expressions
-            // TODO: make this code cleaner
+            if (isREPL) runREPL(statements);
+            else interpreter.interpret(statements);
+        }
+        private static void runREPL(List<Stmt> statements){
             for (Stmt statement : statements) {
                 List<Stmt> printExpr = new ArrayList<>();
-                if (statement instanceof Stmt.Expression && isREPL) {
+                if (statement instanceof Stmt.Expression) {
                     printExpr.add(new Stmt.Print(((Stmt.Expression) statement).expression));
                     interpreter.interpret(printExpr);
                 }
-                else if(isREPL){
+                else{
                     printExpr.add(statement);
                     interpreter.interpret(printExpr);
                 }
             }
-
-            if(!isREPL) interpreter.interpret(statements);
         }
         static void error(int line, String message) {
             report(line, "", message);
