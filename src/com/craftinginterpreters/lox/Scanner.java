@@ -159,7 +159,7 @@ class Scanner {
                 advance();
                 if (peek() == '/' && peekNext() == '*') {advance(); longComment();}
             }
-            if(!isAtEnd()) {advance();advance();}
+            if(!isAtEnd()) {advance(); advance();}
         }
     private boolean match(char expected) {
         if (isAtEnd()) return false;
