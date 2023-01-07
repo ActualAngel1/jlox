@@ -46,9 +46,7 @@ public class Lox {
         }
         private static void run(String source, boolean isREPL) {
             /* Clean code note: I know it is considered bad practice to pass booleans into functions,
-             but it makes the resulting code more understandable and clean this way
-             because the resulting code of separating the function into two will need to declare the entire process
-             of scanning, making lists and parsing, thus creating repetitions in the code
+             but the resulting code is simpler due to the difference between the REPL and script being only apparent when interpreting
              */
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scanTokens();
