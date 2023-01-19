@@ -372,8 +372,8 @@ class Parser {
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
-        // this line should be replaced later
-        return null;
+
+        throw error(peek(), "Expect expression.");
     }
 
     private boolean match(TokenType... types) {
