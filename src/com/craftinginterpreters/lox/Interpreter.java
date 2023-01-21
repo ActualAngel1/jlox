@@ -129,47 +129,62 @@ class Interpreter implements Expr.Visitor<Object>,
         Object right = evaluate(expr.right);
 
         switch (expr.operator.type) {
-            case COMMA:
+            case COMMA -> {
                 return right;
-            case GREATER:
+            }
+            case GREATER -> {
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left > (double)right;
-            case GREATER_EQUAL:
+                return (double) left > (double) right;
+            }
+            case GREATER_EQUAL -> {
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left >= (double)right;
-            case LESS:
+                return (double) left >= (double) right;
+            }
+            case LESS -> {
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left < (double)right;
-            case LESS_EQUAL:
+                return (double) left < (double) right;
+            }
+            case LESS_EQUAL -> {
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left <= (double)right;
-            case BANG_EQUAL: return !isEqual(left, right);
-            case EQUAL_EQUAL: return isEqual(left, right);
-            case MINUS:
+                return (double) left <= (double) right;
+            }
+            case BANG_EQUAL -> {
+                return !isEqual(left, right);
+            }
+            case EQUAL_EQUAL -> {
+                return isEqual(left, right);
+            }
+            case MINUS -> {
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left - (double)right;
-            case PLUS:
+                return (double) left - (double) right;
+            }
+            case PLUS -> {
                 if (left instanceof Double && right instanceof Double) {
-                    return (double)left + (double)right;
+                    return (double) left + (double) right;
                 }
                 if (left instanceof String && right instanceof String) {
-                    return (String)left + (String)right;
+                    return (String) left + (String) right;
                 }
                 if (left instanceof String && right instanceof Double) {
-                    return (String)left + ((Double)right).intValue();
+                    return (String) left + ((Double) right).intValue();
                 }
                 if (left instanceof Double && right instanceof String) {
-                    return ((Double)left).intValue() + (String)right;
+                    return ((Double) left).intValue() + (String) right;
                 }
                 throw new RuntimeError(expr.operator,
                         "Operands must be two numbers or two strings.");
-            case SLASH:
+            }
+            case SLASH -> {
                 checkNumberOperands(expr.operator, left, right);
-                if((double)right == 0) {throw new RuntimeError(expr.operator, "Can't divide by zero");}
-                return (double)left / (double)right;
-            case STAR:
+                if ((double) right == 0) {
+                    throw new RuntimeError(expr.operator, "Can't divide by zero");
+                }
+                return (double) left / (double) right;
+            }
+            case STAR -> {
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left * (double)right;
+                return (double) left * (double) right;
+            }
         }
         // Unreachable.
         return null;

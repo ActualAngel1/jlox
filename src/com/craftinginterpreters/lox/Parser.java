@@ -172,7 +172,6 @@ class Parser {
         return new Stmt.Expression(expr);
     }
     private Stmt.Function function(String kind) {
-        /* TODO: add code that deals with anon function and creates an anon function expr */
         Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
         consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
         List<Token> parameters = new ArrayList<>();
@@ -236,17 +235,10 @@ class Parser {
 
     private Expr ternary(){
         Expr expr = or();
-        /*
-        if (expr==null){
-            error(peek(), "Must have an expression before a ternary operation");
-            return null;
-        }
-        */
         if(match(QUESTION_MARK)) {
             Expr ifTruePart = or();
             consume(COLON, "A colon is expected in a ternary operation");
             Expr ifFalsePart = or();
-            // since there are 3 parts to this expression, we can no longer use Expr.Binary and we need to create Expr.Ternary
             expr = new Expr.Ternary(expr, ifTruePart, ifFalsePart);
         }
         return expr;
@@ -436,16 +428,9 @@ class Parser {
             if (previous().type == SEMICOLON) return;
 
             switch (peek().type) {
-                case CLASS:
-                case FUN:
-                case VAR:
-                case FOR:
-                case IF:
-                case WHILE:
-                case PRINT:
-                case RETURN:
-                case BREAK:
+                case CLASS, FUN, VAR, FOR, IF, WHILE, PRINT, RETURN, BREAK -> {
                     return;
+                }
             }
 
             advance();

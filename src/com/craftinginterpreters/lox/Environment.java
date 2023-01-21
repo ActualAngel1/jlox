@@ -14,7 +14,6 @@ class Environment {
         this.enclosing = enclosing;
     }
     Object get(Token name) {
-        // TODO: Change this code to make it look better.
         if (values.containsKey(name.lexeme) && values.get(name.lexeme)!=null) {
             return values.get(name.lexeme);
         }
@@ -49,6 +48,7 @@ class Environment {
     Environment ancestor(int distance) {
         Environment environment = this;
         for (int i = 0; i < distance; i++) {
+            assert environment != null;
             environment = environment.enclosing;
         }
 

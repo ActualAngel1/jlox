@@ -1,5 +1,4 @@
 package com.craftinginterpreters.lox;
-/*
 class AstPrinter implements Expr.Visitor<String> {
     String print(Expr expr) {
         return expr.accept(this);
@@ -34,6 +33,38 @@ class AstPrinter implements Expr.Visitor<String> {
         if (expr.name == null) return "nil";
         return expr.name.toString();
     }
+    @Override
+    public String visitAssignExpr(Expr.Assign expr){
+        if (expr.name == null) return "nil";
+        return expr.name.toString() + " = " + expr.value.toString();
+    }
+    @Override
+    public String visitCallExpr(Expr.Call expr){
+        if (expr.callee == null) return "nil";
+        return " calls " + expr.callee + " with args " + expr.arguments.toString();
+    }
+    @Override
+    public String visitGetExpr(Expr.Get expr){
+        if (expr.name == null) return "nil";
+        return expr.name.toString();
+    }
+    @Override
+    public String visitSetExpr(Expr.Set expr){
+        if (expr.name == null) return "nil";
+        return expr.name.toString();
+    }
+    @Override
+    public String visitSuperExpr(Expr.Super expr){
+        return "super";
+    }
+    @Override
+    public String visitThisExpr(Expr.This expr){
+        return "this";
+    }
+    @Override
+    public String visitLogicalExpr(Expr.Logical expr){
+        return parenthesize(expr.operator.lexeme, expr.left, expr.right);
+    }
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
 
@@ -47,4 +78,3 @@ class AstPrinter implements Expr.Visitor<String> {
         return builder.toString();
     }
 }
- */
