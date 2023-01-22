@@ -250,6 +250,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         if(scopes.isEmpty()){
             return null;
         }
+        if(scopes.peek().get(expr.name.lexeme)==null){
+            resolveLocal(expr, expr.name);
+            return null;
+        }
         VarState variableState = scopes.peek().get(expr.name.lexeme).state;
         if (!scopes.isEmpty() &&
                 variableState == VarState.DECLARED) {
