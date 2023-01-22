@@ -1,3 +1,4 @@
+// TODO: fix the comma opeartor, when calling a function it takes only the last operand becuase of the comma
 package com.craftinginterpreters.lox;
 
 import java.util.List;
@@ -24,6 +25,7 @@ class Parser {
     }
     private Expr expression() {
         return assignment();
+        // return comma();
     }
     private Stmt declaration() {
         try {
@@ -201,8 +203,21 @@ class Parser {
         consume(RIGHT_BRACE, "Expect '}' after block.");
         return statements;
     }
+    /*
+    private Expr comma(){
+        Expr expr = assignment();
+
+        while(match(COMMA)) {
+            Token operator = previous();
+            Expr right = assignment();
+            expr = new Expr.Binary(expr, operator, right);
+        }
+
+        return expr;
+    }
+     */
     private Expr assignment() {
-        Expr expr = comma();
+        Expr expr = ternary();
 
         if (match(EQUAL)) {
             Token equals = previous();
@@ -221,18 +236,6 @@ class Parser {
 
         return expr;
     }
-    private Expr comma(){
-        Expr expr = ternary();
-
-        while(match(COMMA)) {
-            Token operator = previous();
-            Expr right = ternary();
-            expr = new Expr.Binary(expr, operator, right);
-        }
-
-        return expr;
-    }
-
     private Expr ternary(){
         Expr expr = or();
         if(match(QUESTION_MARK)) {

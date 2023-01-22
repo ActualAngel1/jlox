@@ -1,9 +1,6 @@
 package com.craftinginterpreters.lox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class Interpreter implements Expr.Visitor<Object>,
         Stmt.Visitor<Void> {
@@ -30,6 +27,9 @@ class Interpreter implements Expr.Visitor<Object>,
         }
         catch (BreakException error){
             Lox.BreakException(error);
+        }
+        catch(Exception InputMismatchException){
+            Lox.reportNativeFuncError("Incorrect input type");
         }
     }
     @Override
@@ -185,7 +185,6 @@ class Interpreter implements Expr.Visitor<Object>,
     @Override
     public Object visitCallExpr(Expr.Call expr) {
         Object callee = evaluate(expr.callee);
-
         List<Object> arguments = new ArrayList<>();
         for (Expr argument : expr.arguments) {
             arguments.add(evaluate(argument));
@@ -201,7 +200,6 @@ class Interpreter implements Expr.Visitor<Object>,
                     function.arity() + " arguments but got " +
                     arguments.size() + ".");
         }
-
         return function.call(this, arguments);
     }
     @Override

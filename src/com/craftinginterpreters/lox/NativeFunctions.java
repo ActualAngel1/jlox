@@ -1,5 +1,6 @@
 package com.craftinginterpreters.lox;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;

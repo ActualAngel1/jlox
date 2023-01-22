@@ -102,4 +102,7 @@ public class Lox {
                     "\n[line " + error.token.line + "]");
             hadRuntimeError = true;
         }
+        static void reportNativeFuncError(String message){
+            System.err.println(message + "\n");
+        }
     }
