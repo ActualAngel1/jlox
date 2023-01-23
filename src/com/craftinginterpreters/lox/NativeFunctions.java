@@ -68,7 +68,6 @@ public class NativeFunctions {
                 @Override
                 public Object call(Interpreter interpreter,
                                    List<Object> arguments) {
-                    double input = (double)arguments.get(0);
                     return reader.nextLine();
                 }
 
