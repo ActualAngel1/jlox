@@ -164,6 +164,12 @@ class Interpreter implements Expr.Visitor<Object>,
                 if (left instanceof Double && right instanceof String) {
                     return ((Double) left).intValue() + (String) right;
                 }
+                if(left instanceof String && right instanceof Boolean){
+                    return (String) left + String.valueOf((Boolean) right);
+                }
+                if(left instanceof Boolean && right instanceof String){
+                    return String.valueOf((Boolean) left) + (String) right;
+                }
                 throw new RuntimeError(expr.operator,
                         "Operands must be two numbers or two strings.");
             }
