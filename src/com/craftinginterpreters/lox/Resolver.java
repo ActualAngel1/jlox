@@ -104,7 +104,6 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitFunctionStmt(Stmt.Function stmt) {
         declare(stmt.name);
         define(stmt.name);
-
         resolveFunction(stmt, FunctionType.FUNCTION);
         return null;
     }
@@ -245,29 +244,51 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         resolve(expr.ifTruePart);
         return null;
     }
+
     @Override
     public Void visitVariableExpr(Expr.Variable expr) {
+        int scopeDistance = scopes.size()-1;
         if(scopes.isEmpty()){
             return null;
         }
-        if(scopes.peek().get(expr.name.lexeme)==null){
+        if(scopes.peek().get(expr.name.lexeme)==null && checkIfHasValue(expr)==-1){
             resolveLocal(expr, expr.name);
             return null;
         }
-        VarState variableState = scopes.peek().get(expr.name.lexeme).state;
+        else if(checkIfHasValue(expr)!=-1){
+            scopeDistance = checkIfHasValue(expr);
+        }
+
+        VarState variableState = scopes.get(scopeDistance).get(expr.name.lexeme).state;
         if (!scopes.isEmpty() &&
                 variableState == VarState.DECLARED) {
-
             Lox.error(expr.name,
                     "Can't read local variable in its own initializer.");
 
         } else if (!scopes.isEmpty() &&
-                variableState == VarState.DEFINED) {
-
+                (variableState == VarState.DEFINED || variableState == VarState.USED)) {
+            setUsedInAllLowerScopes(expr);
             scopes.peek().put(expr.name.lexeme, new Var(expr.name, VarState.USED));
         }
+        // this line is the problem
         resolveLocal(expr, expr.name);
         return null;
+    }
+    private int checkIfHasValue(Expr.Variable expr) {
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            if (scopes.get(i).get(expr.name.lexeme)!=null) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void setUsedInAllLowerScopes(Expr.Variable expr){
+        for (int i = scopes.size() - 1; i >= 0; i--) {
+            if(scopes.get(i).containsKey(expr.name.lexeme)){
+                scopes.get(i).put(expr.name.lexeme, new Var(expr.name, VarState.USED));
+            }
+        }
     }
 
     void resolve(List<Stmt> statements) {
@@ -324,12 +345,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         scopes.peek().put(name.lexeme, new Var(name, VarState.DEFINED));
     }
     private void resolveLocal(Expr expr, Token name) {
-        for (int i = scopes.size() - 1; i >= 0; i--) {
+        for (int i = 0; i <= scopes.size(); i++) {
             if (scopes.get(i).containsKey(name.lexeme)) {
                 interpreter.resolve(expr, scopes.size() - 1 - i);
                 return;
             }
         }
     }
+
 
 }
