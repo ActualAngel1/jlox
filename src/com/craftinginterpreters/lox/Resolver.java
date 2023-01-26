@@ -345,7 +345,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         scopes.peek().put(name.lexeme, new Var(name, VarState.DEFINED));
     }
     private void resolveLocal(Expr expr, Token name) {
-        for (int i = 0; i <= scopes.size(); i++) {
+        for (int i = 0; i < scopes.size(); i++) {
             if (scopes.get(i).containsKey(name.lexeme)) {
                 interpreter.resolve(expr, scopes.size() - 1 - i);
                 return;
