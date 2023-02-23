@@ -270,7 +270,6 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
             setUsedInAllLowerScopes(expr);
             scopes.peek().put(expr.name.lexeme, new Var(expr.name, VarState.USED));
         }
-        // this line is the problem
         resolveLocal(expr, expr.name);
         return null;
     }

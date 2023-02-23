@@ -32,7 +32,6 @@ class Scanner {
     }
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
-    // for the scanner to find itself around the sourcecode
     private int start = 0;
     private int current = 0;
     private int line = 1;

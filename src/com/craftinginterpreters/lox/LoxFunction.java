@@ -29,12 +29,6 @@ class LoxFunction implements LoxCallable {
                        List<Object> arguments) {
         Environment environment = new Environment(closure);
         for (int i = 0; i < declaration.params.size(); i++) {
-            /*
-            if (arguments.get(i) instanceof Expr.anonFunction){
-                environment.define(declaration.params.get(i).lexeme,
-                        new Stmt.Function(declaration.params.get(i).lexeme, arguments.get(i)(Expr.anonFunction).params, arguments.get(i)(Expr.anonFunction).body);
-            }
-             */
             environment.define(declaration.params.get(i).lexeme,
                     arguments.get(i));
         }
