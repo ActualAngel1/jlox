@@ -1,4 +1,3 @@
-// TODO: fix the comma opeartor, when calling a function it takes only the last operand becuase of the comma
 package com.craftinginterpreters.lox;
 
 import java.util.List;
